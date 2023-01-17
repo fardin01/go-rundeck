@@ -180,7 +180,7 @@ func (c *Client) RunJob(id string, opts ...RunJobOption) (*Execution, error) {
 	body := bytes.NewReader(req)
 	res, pErr := c.httpPost("job/"+id+"/run", withBody(body), requestJSON(), requestExpects(200))
 	if pErr != nil {
-		return nil, pErr
+		return nil, errors.New("YOOOOO")
 	}
 	if jsonErr := json.Unmarshal(res, data); jsonErr != nil {
 		return nil, &UnmarshalError{msg: multierror.Append(errDecoding, jsonErr).Error()}
