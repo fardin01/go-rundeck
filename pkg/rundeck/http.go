@@ -99,7 +99,8 @@ func (rc *Client) httpPost(path string, opts ...httpclient.RequestOption) ([]byt
 	resp, err := httpclient.Post(rc.makeAPIPath(path), opts...)
 	if err != nil {
 		if resp != nil {
-			fmt.Println("About to check resp for 302")
+			fmt.Printf("status code is: %v", resp.Status)
+			fmt.Printf("headers are: %v", resp.Headers)
 			if resp.Status == 302 {
 				fmt.Println("resp IS 302")
 				rc.Config.BaseURL = resp.Headers.Get("location")
