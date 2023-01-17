@@ -3,6 +3,7 @@ package rundeck
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/cookiejar"
@@ -98,9 +99,9 @@ func (rc *Client) httpPost(path string, opts ...httpclient.RequestOption) ([]byt
 	resp, err := httpclient.Post(rc.makeAPIPath(path), opts...)
 	if err != nil {
 		if resp != nil {
-			println("About to check resp for 302")
+			fmt.Println("About to check resp for 302")
 			if resp.Status == 302 {
-				println("resp IS 302")
+				fmt.Println("resp IS 302")
 				rc.Config.BaseURL = resp.Headers.Get("location")
 				redirectedResp, redirectedErr := httpclient.Post(rc.makeAPIPath(path), opts...)
 				if redirectedErr != nil {
