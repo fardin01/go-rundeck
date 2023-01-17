@@ -14,5 +14,5 @@ const (
 var (
 	// ErrInvalidStatusCode is the error type returned when the user sets expected
 	// status code with `ExpectStatus`, but it does not match
-	ErrInvalidStatusCode = errors.New("response had an invalid status code")
+	ErrInvalidStatusCode = errors.New("response had an invalid status code YOOO")
 )
