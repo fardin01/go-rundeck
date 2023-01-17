@@ -98,6 +98,30 @@ func (rc *Client) httpPost(path string, opts ...httpclient.RequestOption) ([]byt
 	resp, err := httpclient.Post(rc.makeAPIPath(path), opts...)
 	if err != nil {
 		if resp != nil {
+			if resp.Status == 302 {
+				rc.Config.BaseURL = resp.Headers.Get("location")
+				redirectedResp, redirectedErr := httpclient.Post(rc.makeAPIPath(path), opts...)
+				if redirectedErr != nil {
+					if redirectedResp != nil {
+						if redirectedResp.Status == 409 {
+							return nil, ErrResourceConflict
+						}
+						if redirectedResp.Status == 404 {
+							return nil, ErrMissingResource
+						}
+						if redirectedResp.Body != nil {
+							e := &responses.ErrorResponse{}
+							je := json.Unmarshal(redirectedResp.Body, e)
+							if je != nil {
+								return nil, err
+							}
+							return nil, errors.New(e.Message)
+						}
+					}
+					return nil, redirectedErr
+				}
+				return redirectedResp.Body, nil
+			}
 			if resp.Status == 409 {
 				return nil, ErrResourceConflict
 			}
